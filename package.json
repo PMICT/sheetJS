@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-	"build-ci": "ng build sheet-js --prod",
-	"test-ci": "ng test my-first-lib --watch=false --browsers=ChromeHeadless"
+	"build-ci": "ng build sheetJS",
+	"test-ci": "ng test sheetJS --watch=false --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {

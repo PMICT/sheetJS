@@ -26,13 +26,13 @@ export class SheetComponent implements OnInit {
   @ViewChild("scroll")
   public scroll: ElementRef;
 
-  protected contentWidth: number;
+  public contentWidth: number;
 
-  protected contentHeight: number;
+  public contentHeight: number;
 
-  protected width: number;
+  public width: number;
 
-  protected height: number;
+  public height: number;
 
   protected sheetCanvas: SheetCanvasComponent;
 

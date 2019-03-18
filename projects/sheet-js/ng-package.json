@@ -3,5 +3,10 @@
   "dest": "../../dist/sheet-js",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "tslib",
+    "@angular/forms",
+    "pixi.js"
+  ]
 }
