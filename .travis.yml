@@ -3,14 +3,13 @@ node_js:
 - node
 script:
 - npm run build-ci
-before_deploy:
+before_deploy:  
 - cd dist/sheet-js
 deploy:
   provider: npm
   email: npm@iarly.dev
-  skip_cleanup: true
   api_key:
-    secure: a575ffd7-6642-41a8-b117-35d92c6ab74b
+    secure: NgzeyfcYlFkmtDPg0UBLlAbDyxRvwa6wmfGgTqm5Vt9UsT0d0azg1OjQkfcq6l5bQl0vHTemjOaunMWkT+/dzklbuIA3puz2upKYz5vQDEuO5Hbc9sLrPl469oAyAwRZi+pj3+BlB1zJ76fP9bZqrISaQXVr0hUgl6KbI3wYPF0HjQfc7q87MqKTyCwugNz6D56fum4TPnRPGN1X/rVK6U6nu/iJHc+POqcBSI3Rue3xNuEJD0GfhzgWg/rXO7CM89TOWJpcTxx1wX9aSkVqL/vBBrrJx8Zpgk6sy6KrU1MEwheAHWsMSaotyYhY7s+DNPu0qo8jl6GitQsRjJ36YDm7SLLA55V1XlkiGrd1pcjKjMcjaM7bDI3lg2NLEOysNHBdmWMKZ3duszm3W1VGq/JVS6IIvxlgrx2N39gIOgSCMpip57fOW4622vq1X3T9qJ0NtON96i4Zv/y/bQWf4Hkea5h/V8EmwI9FUoKcsy3CM1Mk2DHymr2idmJIUQjFCt4Y3FYeJg4pCICRjtzmdxz5GE41dKTnBLJTV9qC+ylGjA/A7YgE4vKKBZAWW2E1F1d9YCk2z6GF3oDjUOJ4r3nEdFImhuwYMqAq9t2WFPtng62lS0gT7kddI9TgXyPCqcq1R6cBQS3lmLtNkIhf7P6NcLJvXctyew5fiPO5KOc=
   on:
     tags: true
-    repo: @pmict/sheet
+    repo: PMICT/sheetJS
