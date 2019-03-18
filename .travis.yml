@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+- node
+script:
+- npm run build-ci
+before_deploy:
+  - cd dist/sheet-js
+deploy:
+  provider: npm
+  email: npm@iarly.dev
+  skip_cleanup: true
+  api_key:
+    secure: a575ffd7-6642-41a8-b117-35d92c6ab74b
+  on:
+    tags: true
+    repo: @pmict/sheet
