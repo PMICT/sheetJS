@@ -4,7 +4,7 @@ node_js:
 script:
 - npm run build-ci
 before_deploy:
-  - cd dist/sheet-js
+- cd dist/sheet-js
 deploy:
   provider: npm
   email: npm@iarly.dev
