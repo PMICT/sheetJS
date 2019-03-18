@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-ci": "npm install & cd projects/sheet-js & npm install & cd ../.. & ng build sheetJS",
+    "build-ci": "ng build sheetJS",
     "test-ci": "ng test sheetJS --watch=false --browsers=ChromeHeadless"
   },
   "private": true,

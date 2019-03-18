@@ -2,6 +2,10 @@ language: node_js
 node_js:
 - node
 script:
+- npm install
+- cd projects/sheet-js
+- npm install
+- cd ../..
 - npm run build-ci
 before_deploy:  
 - cd dist/sheet-js
