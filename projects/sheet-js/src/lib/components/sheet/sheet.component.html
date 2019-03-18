@@ -1,0 +1,12 @@
+<div #scroll style="overflow: scroll" [style.width.px]="width" [style.height.px]="height"
+  (scroll)="containerOnScroll($event)">
+  <div #container style="position: fixed;">
+
+  </div>
+
+  <div [style.width.px]="contentWidth" [style.height.px]="contentHeight">
+
+  </div>
+  
+  <div #input></div>
+</div>

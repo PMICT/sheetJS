@@ -134,6 +134,41 @@
           }
         }
       }
+    },
+    "sheetJS": {
+      "root": "projects/sheet-js",
+      "sourceRoot": "projects/sheet-js/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/sheet-js/tsconfig.lib.json",
+            "project": "projects/sheet-js/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sheet-js/src/test.ts",
+            "tsConfig": "projects/sheet-js/tsconfig.spec.json",
+            "karmaConfig": "projects/sheet-js/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sheet-js/tsconfig.lib.json",
+              "projects/sheet-js/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "SheetJS-app"

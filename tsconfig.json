@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "sheet-js": [
+        "dist/sheet-js"
+      ],
+      "sheet-js/*": [
+        "dist/sheet-js/*"
+      ]
+    }
   }
 }

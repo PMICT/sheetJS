@@ -1,0 +1,12 @@
+{
+  "name": "sheet-js",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0"
+  },
+  "dependencies": {
+    "@angular/forms": "^7.2.9",
+    "pixi.js": "^5.0.0-rc.2"
+  }
+}
