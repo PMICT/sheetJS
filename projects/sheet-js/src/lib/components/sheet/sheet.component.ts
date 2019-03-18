@@ -55,7 +55,7 @@ export class SheetComponent implements OnInit {
   }
 
   containerOnScroll() {
-    this.sheetCanvas.scroll(this.getScrollLeft(), this.getScrollTop());
+    this.sheetCanvas.scroll(this.getScrollLeft(), this.getScrollTop(), this.height);
 
     if (this.currentInput) {
       this.currentInput.top -= this.lastScrollTop - this.getScrollTop();
@@ -106,6 +106,8 @@ export class SheetComponent implements OnInit {
     this.observable.subscribe((data) => this.updateContent(data));
 
     this.loadSample();
+
+    this.containerOnScroll();
   }
 
   loadSampleColumns() {
@@ -123,7 +125,7 @@ export class SheetComponent implements OnInit {
 
   loadSample() {
     var sample = [];
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 2500; i++) {
       sample.push({
         key: i,
         order: i + 1,

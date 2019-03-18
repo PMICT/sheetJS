@@ -232,4 +232,8 @@ export class RowCanvasComponent {
         return this.cells[index];
     }
 
+    public setRenderable(renderable: boolean) {
+        this.container.renderable = renderable;
+    }
+
 }

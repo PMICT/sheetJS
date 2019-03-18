@@ -40,7 +40,9 @@ export class SheetCanvasComponent {
 
     public onCellEditing = new EventEmitter<{ row: RowCanvasComponent, cell: CellCanvasComponent }>();
 
-    constructor(protected app: PIXI.Application, protected observable: Observable<any[]>, protected parent: PIXI.Container, protected sheetDefinition: SheetDefinitionModel, protected columnDefinitions: ColumnDefinitionModel[]) {
+    constructor(protected app: PIXI.Application, protected observable: Observable<any[]>, 
+        protected parent: PIXI.Container, protected sheetDefinition: SheetDefinitionModel, 
+        protected columnDefinitions: ColumnDefinitionModel[]) {
         this.drawing = new DrawingService();
 
         this.createComponent();
@@ -65,7 +67,7 @@ export class SheetCanvasComponent {
         this.parent.addChild(this.headerContainer);
         this.parent.addChild(this.lineNumbersContainer);
 
-        this.scroll(0, 0);
+        this.scroll(0, 0, 100);
 
         this.createHeader();
     }
@@ -93,13 +95,15 @@ export class SheetCanvasComponent {
         }
     }
 
-    scroll(x: number, y: number) {
+    scroll(x: number, y: number, height: number) {
         this.container.position.x = x + this.sheetDefinition.getDefaultLineNumberWidth() + 1;
         this.container.position.y = y + this.sheetDefinition.getDefaultLineHeight();
         this.headerContainer.position.y = 0;
         this.headerContainer.position.x = x;
         this.lineNumbersContainer.x = 1;
         this.lineNumbersContainer.y = y + this.sheetDefinition.getDefaultLineHeight();
+
+        this.scrollY(y, height);
     }
 
     public sortRows(): RowCanvasComponent[] {
@@ -144,6 +148,7 @@ export class SheetCanvasComponent {
             if (!currentRow) {
                 const row = new RowCanvasComponent(this.container, this.lineNumbersContainer, this.sheetDefinition, this.columnDefinitions);
 
+                row.setRenderable(false);
                 row.setModel(data);
                 row.detectChanges();
 
@@ -320,6 +325,27 @@ export class SheetCanvasComponent {
 
         this.currentCell = currentCell;
         this.currentRow = currentRow;
+    }
+
+    private scrollY(y: number, viewHeight: number): void {
+
+        const spaceBeforeView = - y - viewHeight;
+        let heightOfLines = 0;
+
+        if (!this.sortedRows) 
+            return;
+
+        for (let row of this.sortedRows) {
+            heightOfLines += row.getHeight();
+
+            if (heightOfLines < spaceBeforeView) {
+                row.setRenderable(false);
+            } else if (heightOfLines < y) {
+                row.setRenderable(false);
+            } else {
+                row.setRenderable(true);
+            }
+        }
     }
 
 }
