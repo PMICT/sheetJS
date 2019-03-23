@@ -96,11 +96,11 @@ export class SheetCanvasComponent {
     }
 
     scroll(x: number, y: number, height: number) {
-        this.container.position.x = x + this.sheetDefinition.getDefaultLineNumberWidth() + 1;
+        this.container.position.x = x + this.sheetDefinition.getDefaultLineNumberWidth();
         this.container.position.y = y + this.sheetDefinition.getDefaultLineHeight();
         this.headerContainer.position.y = 0;
         this.headerContainer.position.x = x;
-        this.lineNumbersContainer.x = 1;
+        this.lineNumbersContainer.x = 0;
         this.lineNumbersContainer.y = y + this.sheetDefinition.getDefaultLineHeight();
 
         this.scrollY(y, height);
@@ -156,6 +156,7 @@ export class SheetCanvasComponent {
                 row.onPointerDown.subscribe((row) => this.rowOnPointerDown(row));
                 row.onPointerOver.subscribe((row) => this.rowOnOver(row));
                 row.onCellEditing.subscribe(data => this.onCellEditing.emit(data));
+                row.onResize.subscribe(data => this.sortRows());
 
                 this.rows[key] = row;
             }
@@ -165,9 +166,9 @@ export class SheetCanvasComponent {
     private createHeader() {
         let left = this.sheetDefinition.getDefaultLineNumberWidth();
 
-        for (var x = 1; x < this.columnDefinitions.length + 1; x++) {
-            const position = { x: 1 + left, y: 0 };
-            const column = this.columnDefinitions[x - 1];
+        for (var x = 0; x < this.columnDefinitions.length; x++) {
+            const position = { x: left, y: 0 };
+            const column = this.columnDefinitions[x];
 
             this.headerContainer.addChild(this.drawing.createHeaderCell(position, { width: column.width, height: this.sheetDefinition.getDefaultLineHeight() }, column.title));
 

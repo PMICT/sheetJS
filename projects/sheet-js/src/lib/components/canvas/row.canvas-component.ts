@@ -30,6 +30,8 @@ export class RowCanvasComponent {
 
     protected rowState: RowState;
 
+    public onResize = new EventEmitter<RowCanvasComponent>();
+
     public onPointerUp = new EventEmitter<RowCanvasComponent>();
 
     public onPointerDown = new EventEmitter<RowCanvasComponent>();
@@ -143,6 +145,11 @@ export class RowCanvasComponent {
 
     public getHeight() {
         return this.sheetDefinition.getHeight(this.model);
+    }    
+
+    public setHeight(height: number) {
+        this.sheetDefinition.setHeight(this.model, height);
+        this.detectChanges();
     }
 
     public getModel() {
@@ -168,6 +175,8 @@ export class RowCanvasComponent {
             this.currentHeight = height;
             this.redrawLineNumber();
             this.redrawBackground();
+
+            this.onResize.emit(this);
         }
     }
 

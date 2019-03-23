@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener, ViewContainerRef, ComponentRef, ComponentFactoryResolver, ReflectiveInjector } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, ViewContainerRef, ComponentRef, ComponentFactoryResolver, ReflectiveInjector, Input } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { DrawingService } from '../../services/drawing.service';
 import { SheetCanvasComponent } from '../canvas/sheet.canvas-component';
@@ -15,6 +15,8 @@ import { TextInputComponent } from '../input/text-input/text-input.component';
 })
 export class SheetComponent implements OnInit {
 
+  public static ScrollSize: number = 17;
+
   public app: PIXI.Application;
 
   @ViewChild('input', { read: ViewContainerRef })
@@ -30,9 +32,11 @@ export class SheetComponent implements OnInit {
 
   public contentHeight: number;
 
-  public width: number;
+  @Input()
+  public width: number = 1200;
 
-  public height: number;
+  @Input()
+  public height: number = 700;
 
   protected sheetCanvas: SheetCanvasComponent;
 
@@ -50,8 +54,7 @@ export class SheetComponent implements OnInit {
   protected lastScrollLeft: number = 0;
 
   constructor(private componentFactory: ComponentFactoryResolver, public element: ElementRef, public drawing: DrawingService) {
-    this.width = 1200 + 25;
-    this.height = 700 + 25;
+
   }
 
   containerOnScroll() {
@@ -101,7 +104,7 @@ export class SheetComponent implements OnInit {
     this.sheetCanvas = new SheetCanvasComponent(this.app, this.observable, this.app.stage, this.sheetDefinition, this.columnDefinitions);
     this.sheetCanvas.onCellEditing.subscribe((data) => this.cellOnEdit(data));
 
-    this.app.stage.addChild(this.drawing.createLineNumberCell({ x: 1, y: 0 }, { width: 50, height: 28 }, null));
+    this.app.stage.addChild(this.drawing.createLineNumberCell({ x: 0, y: 0 }, { width: 50, height: 28 }, null));
 
     this.observable.subscribe((data) => this.updateContent(data));
 
@@ -113,7 +116,7 @@ export class SheetComponent implements OnInit {
   loadSampleColumns() {
     this.columnDefinitions.push(new ColumnDefinitionModel(0, 50, "A", "A"));
     this.columnDefinitions.push(new ColumnDefinitionModel(50, 50, "B", "B"));
-    this.columnDefinitions.push(new ColumnDefinitionModel(100, 300, "C", "C", true));
+    this.columnDefinitions.push(new ColumnDefinitionModel(100, 300, "C", "C", true, true));
     this.columnDefinitions.push(new ColumnDefinitionModel(400, 100, "D", "D"));
     this.columnDefinitions.push(new ColumnDefinitionModel(500, 100, "E", "E"));
     this.columnDefinitions.push(new ColumnDefinitionModel(600, 100, "F", "F"));
@@ -125,7 +128,7 @@ export class SheetComponent implements OnInit {
 
   loadSample() {
     var sample = [];
-    for (var i = 0; i < 2500; i++) {
+    for (var i = 0; i < 1000; i++) {
       sample.push({
         key: i,
         order: i + 1,
@@ -156,7 +159,7 @@ export class SheetComponent implements OnInit {
   }
 
   intializeApp() {
-    this.app = new PIXI.Application({ width: this.width - 17, height: this.height - 17, transparent: true });
+    this.app = new PIXI.Application({ width: this.width - SheetComponent.ScrollSize, height: this.height - SheetComponent.ScrollSize, transparent: true });
     this.container.nativeElement.appendChild(this.app.view);
 
     this.app.stage.position.x = 1;
@@ -164,13 +167,20 @@ export class SheetComponent implements OnInit {
 
   cellOnEdit(data: { row: RowCanvasComponent, cell: CellCanvasComponent }) {
     this.input.clear();
-    this.currentInput = null;
+
+    if (this.currentInput) {
+      this.currentInput.destroy();
+      this.currentInput = null;
+    }
 
     if (data != null) {
       const component = this.createComponent<TextInputComponent>(this.input, TextInputComponent);
       const input = component.instance;
-      let top = data.row.getTop() + this.sheetDefinition.getDefaultLineHeight() + 8 + this.getScrollTop();
-      let left = data.cell.getLeft() + this.sheetDefinition.getDefaultLineNumberWidth() + 9 + 1 + this.getScrollLeft();
+
+      let top = data.row.getTop() + this.sheetDefinition.getDefaultLineHeight() + this.getScrollTop();
+      let left = data.cell.getLeft() + this.sheetDefinition.getDefaultLineNumberWidth() + this.getScrollLeft();
+
+      left += 1;
 
       input.top = top;
       input.left = left;
@@ -178,7 +188,9 @@ export class SheetComponent implements OnInit {
       input.height = data.row.getHeight();
       input.model = data.cell.getValue();
       input.outline = data.cell.getOutline();
+      input.autoSize = data.cell.shouldAutoSize();
       input.modelChange.subscribe((value) => data.cell.setValue(value));
+      input.sizeChange.subscribe((value) => data.row.setHeight(value.height));
 
       this.currentInput = input;
 

@@ -41,7 +41,7 @@ export class DrawingService {
   public createText(position: { x: number, y: number }, dimension: { width: number, height: number }, text: string): PIXI.Text {
     var style = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 10,
+      fontSize: 11,
       fill: 0x0,
       stroke: '#4a1850',
       wordWrap: true,
@@ -52,8 +52,7 @@ export class DrawingService {
 
     var richText = new PIXI.Text(text, style);
     richText.x = position.x;
-    richText.y = position.y + dimension.height / 2;
-    richText.anchor.set(0, 0.5);
+    richText.y = position.y;
 
     return richText;
   }

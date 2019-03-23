@@ -48,8 +48,11 @@ export class CellCanvasComponent {
 
         const dimension = { width: this.getWidth(), height: this.sheetDefinition.getDefaultLineHeight() };
 
+        container.width = dimension.width;
+        container.height = dimension.height;
+
         this.box = this.drawing.createBox({ x: 0, y: 0 }, dimension);
-        this.text = this.drawing.createText({ x: 0 + margin, y: 0 },
+        this.text = this.drawing.createText({ x: 0 + margin, y: margin },
             { width: dimension.width - margin, height: dimension.height }, "");
 
         container.position.x = this.getLeft();
@@ -62,6 +65,10 @@ export class CellCanvasComponent {
 
         this.parent.addChild(container);
         this.detectChanges();
+    }
+
+    public shouldAutoSize(): boolean {
+        return this.definition.autoSize;
     }
 
     public getWidth(): number {
@@ -85,6 +92,10 @@ export class CellCanvasComponent {
         return this.definition.getFormattedValue(this.model);
     }
 
+    public getMarginLeft(): number {
+        return 5 + this.getOutline() * 15;
+    }
+
     public getOutline(): number {
         if (!this.definition.hasOutline)
             return 0;
@@ -98,7 +109,7 @@ export class CellCanvasComponent {
 
         this.drawing.drawBox(this.box, dimension, null, this.state >= CellState.editing ? 2 : 1);
 
-        this.text.position.x = 5 + this.getOutline() * 15;
+        this.text.position.x = this.getMarginLeft();
         this.text.style.wordWrapWidth = this.getWidth() - this.text.position.x;
     }
 
@@ -106,13 +117,17 @@ export class CellCanvasComponent {
         this.model = model;
 
         const width = this.getWidth();
-        const height = this.sheetDefinition.getHeight(this.model);
+        const height = this.getHeight();
 
         if (this.width != width || this.height != height) {
             this.width = width;
             this.height = height;
             this.redrawBox();
         }
+    }
+
+    private getHeight() {
+        return this.sheetDefinition.getHeight(this.model);
     }
 
     public edit() {
@@ -146,9 +161,16 @@ export class CellCanvasComponent {
 
         const content = this.getFormattedValue();
 
+        const currentHeight = this.getHeight();
+
         if (content != this.currentContent) {
             this.currentContent = content;
             this.text.text = content;
+        }
+        
+        if (currentHeight != this.height) {
+            this.height = currentHeight;
+            this.redrawBox();
         }
     }
 }

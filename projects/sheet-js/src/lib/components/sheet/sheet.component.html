@@ -1,12 +1,12 @@
-<div #scroll style="overflow: scroll" [style.width.px]="width" [style.height.px]="height"
+<div #scroll style="overflow: scroll;" [style.width.px]="width" [style.height.px]="height"
   (scroll)="containerOnScroll()">
-  <div #container style="position: fixed;">
+  <div #container style="position: absolute;">
+    <div #input></div>
 
   </div>
 
   <div [style.width.px]="contentWidth" [style.height.px]="contentHeight">
 
   </div>
-  
-  <div #input></div>
+
 </div>

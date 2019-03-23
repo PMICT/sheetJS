@@ -1,7 +1,7 @@
 
 export class ColumnDefinitionModel {
 
-    constructor(public x: number, public width: number, public property: string, public title: string, public hasOutline: boolean = false) {
+    constructor(public x: number, public width: number, public property: string, public title: string, public hasOutline: boolean = false, public autoSize: boolean = false) {
 
     }
 

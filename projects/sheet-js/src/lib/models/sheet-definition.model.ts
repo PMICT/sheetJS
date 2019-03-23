@@ -9,6 +9,10 @@ export class SheetDefinitionModel {
         return 50;
     }
 
+    public setHeight(model: any, height: number) {
+        model.height = height;
+    }
+
     public getHeight(model: any): number {
         if (model == null)
             return 28;
