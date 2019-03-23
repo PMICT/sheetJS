@@ -5,6 +5,7 @@ import { SheetDefinitionModel } from '../../models/sheet-definition.model';
 import * as PIXI from 'pixi.js';
 import { RowState } from '../../models/row-state.model';
 import { EventEmitter } from '@angular/core';
+import { FontModel } from '../../models/font.model';
 
 export class RowCanvasComponent {
 
@@ -88,6 +89,9 @@ export class RowCanvasComponent {
         container.cursor = "move";
 
         const margin = 5;
+        const textStyle = new FontModel();
+        textStyle.align = "center";
+        textStyle.verticalAlign = "middle";
 
         container.on('pointerover', () => this.rowOnPointerOver());
         container.on('pointerout', () => this.rowOnPointerOut());
@@ -99,7 +103,7 @@ export class RowCanvasComponent {
         container.addChild(this.lineNumberBox = this.drawing.createBox({ x: 0, y: 0 }, dimension, 0xe6e6e6));
 
         container.addChild(this.lineNumberText = this.drawing.createText({ x: 0 + margin, y: 0 },
-            { width: dimension.width - margin, height: dimension.height }, null));
+            { width: dimension.width, height: dimension.height }, null, textStyle));
 
         container.position.x = 0;
         container.position.y = 0;
