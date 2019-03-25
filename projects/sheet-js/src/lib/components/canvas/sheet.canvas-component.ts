@@ -38,6 +38,8 @@ export class SheetCanvasComponent {
 
     protected isMultiselecting = false;
 
+    public onResize = new EventEmitter<{ width: number, height: number }>();
+
     public onCellEditing = new EventEmitter<{ row: RowCanvasComponent, cell: CellCanvasComponent }>();
 
     constructor(protected app: PIXI.Application, protected observable: Observable<any[]>, 
@@ -85,7 +87,7 @@ export class SheetCanvasComponent {
 
         this.rowsData = rowsData;
 
-        this.sortRows();
+        this.sortAndResize();
     }
 
     public detectChanges() {
@@ -106,7 +108,7 @@ export class SheetCanvasComponent {
         this.scrollY(y, height);
     }
 
-    public sortRows(): RowCanvasComponent[] {
+    public sortAndResize(): RowCanvasComponent[] {
         let rows: RowCanvasComponent[] = [];
 
         for (const key in this.rows) {
@@ -124,6 +126,11 @@ export class SheetCanvasComponent {
         }
 
         this.sortedRows = rows;
+
+        const contentWidth = this.columnDefinitions.map(x => x.width).reduce((a, b) => a + b);
+        const contentHeight = 28 + height;
+
+        this.onResize.emit({ width: contentWidth, height: contentHeight });
 
         return rows;
     }
@@ -156,7 +163,7 @@ export class SheetCanvasComponent {
                 row.onPointerDown.subscribe((row) => this.rowOnPointerDown(row));
                 row.onPointerOver.subscribe((row) => this.rowOnOver(row));
                 row.onCellEditing.subscribe(data => this.onCellEditing.emit(data));
-                row.onResize.subscribe(data => this.sortRows());
+                row.onResize.subscribe(data => this.sortAndResize());
 
                 this.rows[key] = row;
             }
@@ -236,7 +243,7 @@ export class SheetCanvasComponent {
 
         this.unselectAll();
 
-        this.selectedRows = this.sortRows().filter(r => r.getOrder() >= minOrder && r.getOrder() <= maxOrder);
+        this.selectedRows = this.sortAndResize().filter(r => r.getOrder() >= minOrder && r.getOrder() <= maxOrder);
 
         this.currentRow = row;
         this.currentCell = row.selectedCell;

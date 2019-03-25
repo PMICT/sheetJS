@@ -8,6 +8,7 @@ import { ColumnDefinitionModel } from '../../models/column-definition.model';
 import { CellCanvasComponent } from '../canvas/cell.canvas-component';
 import { RowCanvasComponent } from '../canvas/row.canvas-component';
 import { TextInputComponent } from '../input/text-input/text-input.component';
+import { TextAreaInputComponent } from '../input/text-area-input/text-area-input.component';
 
 @Component({
   selector: 'ct-sheet',
@@ -103,6 +104,10 @@ export class SheetComponent implements OnInit {
 
     this.sheetCanvas = new SheetCanvasComponent(this.app, this.observable, this.app.stage, this.sheetDefinition, this.columnDefinitions);
     this.sheetCanvas.onCellEditing.subscribe((data) => this.cellOnEdit(data));
+    this.sheetCanvas.onResize.subscribe((data) => {
+      this.contentHeight = data.height;
+      this.contentWidth = data.width;
+    })
 
     this.app.stage.addChild(this.drawing.createLineNumberCell({ x: 0, y: 0 }, { width: 50, height: 28 }, null));
 
@@ -116,7 +121,7 @@ export class SheetComponent implements OnInit {
   loadSampleColumns() {
     this.columnDefinitions.push(new ColumnDefinitionModel(0, 50, "A", "A"));
     this.columnDefinitions.push(new ColumnDefinitionModel(50, 50, "B", "B"));
-    this.columnDefinitions.push(new ColumnDefinitionModel(100, 300, "C", "C", true, true));
+    this.columnDefinitions.push(new ColumnDefinitionModel(100, 300, "C", "C", true, true, TextAreaInputComponent));
     this.columnDefinitions.push(new ColumnDefinitionModel(400, 100, "D", "D"));
     this.columnDefinitions.push(new ColumnDefinitionModel(500, 100, "E", "E"));
     this.columnDefinitions.push(new ColumnDefinitionModel(600, 100, "F", "F"));
@@ -174,7 +179,9 @@ export class SheetComponent implements OnInit {
     }
 
     if (data != null) {
-      const component = this.createComponent<TextInputComponent>(this.input, TextInputComponent);
+      const columnDefinition = data.cell.definition;
+      const inputComponentType = columnDefinition.inputType || TextInputComponent;
+      const component = this.createComponent<TextInputComponent>(this.input, inputComponentType);
       const input = component.instance;
 
       let top = data.row.getTop() + this.sheetDefinition.getDefaultLineHeight() + this.getScrollTop();

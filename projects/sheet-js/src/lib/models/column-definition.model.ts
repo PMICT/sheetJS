@@ -1,8 +1,13 @@
+import { Formatter } from '../components/formatters/formatter';
+import { StringFormatter } from '../components/formatters/string.formatter';
 
 export class ColumnDefinitionModel {
 
-    constructor(public x: number, public width: number, public property: string, public title: string, public hasOutline: boolean = false, public autoSize: boolean = false) {
-
+    constructor(public x: number, public width: number, public property: string, 
+        public title: string, public hasOutline: boolean = false, 
+        public autoSize: boolean = false, public inputType: any = null,
+        public formatter: Formatter = new StringFormatter()) {
+            
     }
 
     public getOutlineLevel(model: any) {
@@ -14,17 +19,18 @@ export class ColumnDefinitionModel {
     }
 
     public getValue(model: any): any {
-        if (model[this.property] == null)
-            return "";
-
         return model[this.property];
+    }
+
+    public setFormattedValue(model: any, value: string) {
+        this.formatter.toModel(model, this.property, value);
     }
 
     public getFormattedValue(model: any): string {
         if (model[this.property] == null)
             return "";
 
-        return model[this.property];
+        return this.formatter.toString(model, this.property);
     }
 
 }

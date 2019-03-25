@@ -31,7 +31,7 @@ export class CellCanvasComponent {
 
     public onEditing = new EventEmitter<CellCanvasComponent>();
 
-    constructor(protected parent: PIXI.Container, protected sheetDefinition: SheetDefinitionModel, protected definition: ColumnDefinitionModel) {
+    constructor(protected parent: PIXI.Container, protected sheetDefinition: SheetDefinitionModel, public definition: ColumnDefinitionModel) {
         this.drawing = new DrawingService();
 
         this.createComponent();
