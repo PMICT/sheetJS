@@ -1,6 +1,9 @@
 {
   "name": "@pmict/sheet",
   "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0"
