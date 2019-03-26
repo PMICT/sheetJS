@@ -122,7 +122,7 @@ export class CellCanvasComponent {
 
         this.text.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
 
-        this.drawing.drawBox(this.box, dimension, null, this.state >= CellState.editing ? 2 : 1);
+        this.drawing.drawBox(this.box, dimension, null);
 
         this.text.position.x = this.getMarginLeft();
         this.text.style.wordWrapWidth = this.getWidth() - this.text.position.x;

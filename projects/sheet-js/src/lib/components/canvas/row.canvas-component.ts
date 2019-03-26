@@ -6,6 +6,7 @@ import * as PIXI from 'pixi.js';
 import { RowState } from '../../models/row-state.model';
 import { EventEmitter } from '@angular/core';
 import { FontModel } from '../../models/font.model';
+import { MoreVertical } from './images';
 
 export class RowCanvasComponent {
 
@@ -16,6 +17,8 @@ export class RowCanvasComponent {
     protected cells: CellCanvasComponent[] = [];
 
     protected container: PIXI.Container;
+
+    protected menuContainer: PIXI.Container;
 
     protected background: PIXI.Graphics;
 
@@ -44,8 +47,10 @@ export class RowCanvasComponent {
     public onPointerOut = new EventEmitter<RowCanvasComponent>();
 
     public onCellEditing = new EventEmitter<{ row: RowCanvasComponent, cell: CellCanvasComponent }>();
-    
+
     public onFoldingChange = new EventEmitter<RowCanvasComponent>();
+
+    public onMenuClick = new EventEmitter<RowCanvasComponent>();
 
     public selectedCell: CellCanvasComponent;
 
@@ -115,8 +120,33 @@ export class RowCanvasComponent {
         container.position.x = 0;
         container.position.y = 0;
 
+        const menu = this.createMenu();
+        menu.position.x = 5;
+        menu.position.y = dimension.height / 2;
+        menu.visible = false;
+
+        container.addChild(menu);
+
         this.lineNumbersContainer.addChild(container);
         this.lineNumber = container;
+        this.menuContainer = menu;
+    }
+
+    public createMenu(): PIXI.Container {
+        const container = new PIXI.Container();
+        container.interactive = true;
+        container.buttonMode = true;
+
+        const figure = PIXI.Sprite.from(MoreVertical);
+        figure.anchor.set(0, 0.5);
+        figure.width = 15;
+        figure.height = 15;
+
+        container.addChild(figure);
+        container.hitArea = new PIXI.Rectangle(0, 0, 15, 15);
+        container.on("pointerup", () => this.onMenuClick.emit(this));
+
+        return container;
     }
 
     public redrawLineNumber() {
@@ -128,14 +158,15 @@ export class RowCanvasComponent {
     public redrawBackground() {
         const width = this.columnDefinitions.map(x => x.width).reduce((a, b) => a + b);
         const height = this.getHeight();
+        const isOver = (this.rowState & RowState.over) == RowState.over;
+        const isSelected = (this.rowState & RowState.selected) == RowState.selected;
 
-        const color = (this.rowState & RowState.over) == RowState.over
-            ? 0xe6e6e6
-            : (this.rowState & RowState.selected) == RowState.selected
-                ? 0xe6e6e6
-                : 0xFFFFFF;
+        const color = isOver ? 0xe6e6e6 : isSelected ? 0xe6e6e6 : 0xFFFFFF;
 
         this.background.clear();
+
+        if (this.menuContainer)
+            this.menuContainer.visible = isOver || isSelected;
 
         this.drawing.drawBox(this.background, { width: width, height: height }, color);
     }
@@ -161,7 +192,7 @@ export class RowCanvasComponent {
 
     public getHeight() {
         return this.sheetDefinition.getHeight(this.model);
-    }    
+    }
 
     public setHeight(height: number) {
         this.sheetDefinition.setHeight(this.model, height);

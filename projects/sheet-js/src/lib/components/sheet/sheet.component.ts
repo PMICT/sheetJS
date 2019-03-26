@@ -107,7 +107,11 @@ export class SheetComponent implements OnInit {
     this.sheetCanvas.onResize.subscribe((data) => {
       this.contentHeight = data.height;
       this.contentWidth = data.width;
-    })
+    });
+
+    this.sheetCanvas.onMenuClick.subscribe(data => {
+      console.log(data);
+    });
 
     this.app.stage.addChild(this.drawing.createLineNumberCell({ x: 0, y: 0 }, { width: 50, height: 28 }, null));
 
@@ -151,7 +155,7 @@ export class SheetComponent implements OnInit {
         J: 1 + i,
         K: 1 + i,
         outline: 1 + i % 4,
-        height: 28 + (i % 10 == 0 ? 10 : 0)
+        height: 28
       })
     }
 

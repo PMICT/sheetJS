@@ -48,6 +48,8 @@ export class SheetCanvasComponent {
 
     public onCellEditing = new EventEmitter<{ row: RowCanvasComponent, cell: CellCanvasComponent }>();
 
+    public onMenuClick = new EventEmitter<{ model: any, x: number, y: number }>();
+
     constructor(protected app: PIXI.Application, protected observable: Observable<any[]>,
         protected parent: PIXI.Container, protected sheetDefinition: SheetDefinitionModel,
         protected columnDefinitions: ColumnDefinitionModel[]) {
@@ -199,6 +201,7 @@ export class SheetCanvasComponent {
                 row.onCellEditing.subscribe(data => this.onCellEditing.emit(data));
                 row.onResize.subscribe(data => this.sortAndResize());
                 row.onFoldingChange.subscribe(data => this.rowOnFoldingChange());
+                row.onMenuClick.subscribe(data => this.rowOnMenuClick(data));
 
                 this.rows[key] = row;
             }
@@ -216,6 +219,18 @@ export class SheetCanvasComponent {
 
             left += column.width;
         }
+    }
+
+    private rowOnMenuClick(row: RowCanvasComponent) {
+        const model = row.getModel();
+        const y = row.getTop();
+        const x = 0;
+
+        this.onMenuClick.emit({
+            model: model,
+            x: x,
+            y: y
+        })
     }
 
     private rowOnFoldingChange() {
