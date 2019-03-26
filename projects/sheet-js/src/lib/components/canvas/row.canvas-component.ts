@@ -31,6 +31,8 @@ export class RowCanvasComponent {
 
     protected rowState: RowState;
 
+    public hidden = false;
+
     public onResize = new EventEmitter<RowCanvasComponent>();
 
     public onPointerUp = new EventEmitter<RowCanvasComponent>();
@@ -42,6 +44,8 @@ export class RowCanvasComponent {
     public onPointerOut = new EventEmitter<RowCanvasComponent>();
 
     public onCellEditing = new EventEmitter<{ row: RowCanvasComponent, cell: CellCanvasComponent }>();
+    
+    public onFoldingChange = new EventEmitter<RowCanvasComponent>();
 
     public selectedCell: CellCanvasComponent;
 
@@ -66,6 +70,9 @@ export class RowCanvasComponent {
 
         this.columnDefinitions.forEach(definition => {
             const cell = new CellCanvasComponent(container, this.sheetDefinition, definition);
+
+            cell.onFold.subscribe(cell => this.setFoldedUp(false));
+            cell.onUnfold.subscribe(cell => this.setFoldedUp(true));
             cell.onPointerDown.subscribe(cell => this.cellOnPointerDown(cell));
             cell.onPointerUp.subscribe(cell => this.cellOnPointerUp(cell));
             cell.onEditing.subscribe(cell => this.cellOnEditing(cell));
@@ -131,6 +138,11 @@ export class RowCanvasComponent {
         this.background.clear();
 
         this.drawing.drawBox(this.background, { width: width, height: height }, color);
+    }
+
+    public setFoldedUp(value: boolean) {
+        this.sheetDefinition.setFoldedUp(this.model, value);
+        this.onFoldingChange.emit(this);
     }
 
     public setTop(top: number) {
@@ -246,6 +258,9 @@ export class RowCanvasComponent {
     }
 
     public setRenderable(renderable: boolean) {
+        this.lineNumber.visible = renderable;
+        this.container.visible = renderable;
+        this.lineNumber.renderable = renderable;
         this.container.renderable = renderable;
     }
 

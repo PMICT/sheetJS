@@ -10,10 +10,6 @@ export class ColumnDefinitionModel {
             
     }
 
-    public getOutlineLevel(model: any) {
-        return model.outline;
-    }
-
     public setValue(model: any, value: any): any {
         model[this.property] = value;
     }

@@ -136,6 +136,8 @@ export class SheetComponent implements OnInit {
     for (var i = 0; i < 1000; i++) {
       sample.push({
         key: i,
+        parentKey: (i % 4) == 0 ? null : i - 1,
+        isParent: (i % 4) < 4,
         order: i + 1,
         A: 1 + i,
         B: 1 + i,
